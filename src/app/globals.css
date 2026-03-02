@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   VALTIQ — Global Styles
+   ============================================================ */
+
+/* Import Inter font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Base styles */
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-gray-900 antialiased;
+  }
+}
+
+/* Utility classes */
+@layer components {
+  /* Gold gradient button */
+  .btn-gold {
+    @apply bg-gold hover:bg-gold-dark text-navy font-semibold px-6 py-3 rounded-lg
+           transition-all duration-200 shadow-md hover:shadow-lg;
+  }
+
+  /* Navy button */
+  .btn-navy {
+    @apply bg-navy hover:bg-navy-light text-white font-semibold px-6 py-3 rounded-lg
+           transition-all duration-200;
+  }
+
+  /* Outline button */
+  .btn-outline {
+    @apply border-2 border-gold text-gold hover:bg-gold hover:text-navy font-semibold
+           px-6 py-3 rounded-lg transition-all duration-200;
+  }
+
+  /* Form input style */
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-200 rounded-lg bg-white
+           focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold
+           transition-all duration-200 text-gray-900 placeholder-gray-400;
+  }
+
+  /* Card style */
+  .card {
+    @apply bg-white rounded-xl shadow-md border border-gray-100 p-6;
+  }
+
+  /* Section container */
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* Print styles — hide nav/footer when printing the report page */
+@media print {
+  nav, footer, .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+  }
+  .print-break {
+    page-break-before: always;
+  }
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Fade-in animation for page transitions */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
