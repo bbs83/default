@@ -602,7 +602,7 @@ export default function NewValuationPage() {
                   <p className="text-xs text-gray-400 mt-1">One-time payment. No subscription.</p>
                 </div>
 
-                {/* Payment button */}
+                {/* Generate Report button (payment bypassed for testing) */}
                 <button
                   onClick={handlePayment}
                   disabled={loading || !delivery.email}
@@ -613,11 +613,11 @@ export default function NewValuationPage() {
                   ) : (
                     <CreditCard className="w-5 h-5" />
                   )}
-                  {loading ? 'Redirecting to Stripe...' : 'Proceed to Payment'}
+                  {loading ? 'Generating Report...' : 'Generate Report'}
                 </button>
 
                 <p className="text-xs text-gray-400 text-center">
-                  Secure payment processed by Stripe. You will be redirected to complete payment.
+                  (Payment bypassed for testing. Report will be generated immediately.)
                 </p>
               </div>
             </div>
