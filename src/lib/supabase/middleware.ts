@@ -3,6 +3,7 @@
    ============================================================
    Refreshes the auth session on every request so cookies
    stay valid. Called from the root middleware.ts file.
+   Updated: Force rebuild
    ============================================================ */
 
 import { createServerClient } from '@supabase/ssr';
@@ -10,19 +11,21 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 export async function updateSession(request: NextRequest) {
   // Create a response that we can modify (add cookies)
-  let supabaseResponse = NextResponse.next({ request });
+  const supabaseResponse = NextResponse.next({ request });
 
+  // Get environment variables
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  console.log('[v0] Supabase middleware - URL exists:', !!supabaseUrl, 'Key exists:', !!supabaseAnonKey);
-
   // Skip Supabase session refresh if env vars are not set
   if (!supabaseUrl || !supabaseAnonKey) {
-    console.log('[v0] Skipping Supabase session refresh - env vars missing');
+    console.log('[v0] Middleware: Supabase env vars not found, skipping session refresh');
     return supabaseResponse;
   }
 
+  // Create Supabase client with cookie handling
+  let response = supabaseResponse;
+  
   const supabase = createServerClient(
     supabaseUrl,
     supabaseAnonKey,
@@ -37,10 +40,10 @@ export async function updateSession(request: NextRequest) {
             request.cookies.set(name, value)
           );
           // Recreate response with updated request
-          supabaseResponse = NextResponse.next({ request });
+          response = NextResponse.next({ request });
           // Set cookies on the response (sent back to browser)
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            response.cookies.set(name, value, options)
           );
         },
       },
@@ -50,5 +53,5 @@ export async function updateSession(request: NextRequest) {
   // Refresh the auth session (reads and updates cookies)
   await supabase.auth.getUser();
 
-  return supabaseResponse;
+  return response;
 }
