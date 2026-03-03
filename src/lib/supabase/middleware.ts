@@ -15,8 +15,11 @@ export async function updateSession(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+  console.log('[v0] Supabase middleware - URL exists:', !!supabaseUrl, 'Key exists:', !!supabaseAnonKey);
+
   // Skip Supabase session refresh if env vars are not set
   if (!supabaseUrl || !supabaseAnonKey) {
+    console.log('[v0] Skipping Supabase session refresh - env vars missing');
     return supabaseResponse;
   }
 
