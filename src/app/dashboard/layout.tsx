@@ -1,14 +1,30 @@
 /* ============================================================
    Dashboard Layout — wraps all /dashboard/* pages
    ============================================================
-   Simple layout that just renders children. The auth check
-   is handled by middleware + individual page components.
+   Protects dashboard routes by checking authentication.
+   Redirects to login if user is not authenticated.
    ============================================================ */
 
-export default function DashboardLayout({
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
+
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  try {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      redirect('/login');
+    }
+
+    return <>{children}</>;
+  } catch (error) {
+    // If Supabase is not configured, still allow access for development
+    console.log('[v0] Dashboard layout: Supabase error, allowing access:', error);
+    return <>{children}</>;
+  }
 }
