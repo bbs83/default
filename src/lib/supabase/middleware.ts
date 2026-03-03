@@ -1,9 +1,8 @@
 /* ============================================================
-   Supabase Middleware Helper
+   Supabase Middleware Helper - v2
    ============================================================
    Refreshes the auth session on every request so cookies
    stay valid. Called from the root middleware.ts file.
-   Updated: Force rebuild
    ============================================================ */
 
 import { createServerClient } from '@supabase/ssr';
@@ -11,24 +10,23 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 export async function updateSession(request: NextRequest) {
   // Create a response that we can modify (add cookies)
-  const supabaseResponse = NextResponse.next({ request });
+  const defaultResponse = NextResponse.next({ request });
 
-  // Get environment variables
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  // Get environment variables - check both naming conventions
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
 
   // Skip Supabase session refresh if env vars are not set
-  if (!supabaseUrl || !supabaseAnonKey) {
-    console.log('[v0] Middleware: Supabase env vars not found, skipping session refresh');
-    return supabaseResponse;
+  if (!url || !anonKey) {
+    return defaultResponse;
   }
 
   // Create Supabase client with cookie handling
-  let response = supabaseResponse;
+  let response = defaultResponse;
   
   const supabase = createServerClient(
-    supabaseUrl,
-    supabaseAnonKey,
+    url,
+    anonKey,
     {
       cookies: {
         getAll() {

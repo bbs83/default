@@ -14,19 +14,20 @@ export async function middleware(request: NextRequest) {
   // First, refresh the Supabase session cookies
   const response = await updateSession(request);
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  // Get environment variables - check both naming conventions  
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
 
   // Skip auth protection if env vars are not set
-  if (!supabaseUrl || !supabaseAnonKey) {
+  if (!url || !anonKey) {
     return response;
   }
 
   // Protect /dashboard routes — redirect to /login if not logged in
   if (request.nextUrl.pathname.startsWith('/dashboard')) {
     const supabase = createServerClient(
-      supabaseUrl,
-      supabaseAnonKey,
+      url,
+      anonKey,
       {
         cookies: {
           getAll() {
