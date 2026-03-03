@@ -45,9 +45,8 @@ export default function LoginForm() {
     }
 
     toast.success('Welcome back!');
-    router.push(redirectTo);
-    router.refresh();
-    setLoading(false);
+    // Use window.location for a full page navigation to ensure cookies are properly set
+    window.location.href = redirectTo;
   };
 
   return (
