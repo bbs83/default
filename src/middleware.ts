@@ -1,20 +1,19 @@
-/* ============================================================
-   Next.js Middleware
-   ============================================================
-   Simple middleware that just passes requests through.
-   Auth protection is handled in individual pages/layouts.
-   ============================================================ */
-
-import { type NextRequest, NextResponse } from 'next/server';
+import { updateSession } from '@/lib/supabase/middleware'
+import { type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  // Just pass the request through - auth is handled in pages
-  return NextResponse.next();
+  return await updateSession(request)
 }
 
-// Run middleware on all pages except static files
 export const config = {
   matcher: [
+    /*
+     * Match all request paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - images - .svg, .png, .jpg, .jpeg, .gif, .webp
+     */
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
-};
+}

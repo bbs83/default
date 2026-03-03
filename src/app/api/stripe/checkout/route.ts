@@ -12,7 +12,7 @@ import type { ValuationFormData } from '@/types';
 export async function POST(request: Request) {
   try {
     // Get the authenticated user
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {

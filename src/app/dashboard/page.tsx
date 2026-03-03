@@ -14,7 +14,7 @@ import { formatCurrency, formatDate } from '@/lib/utils';
 import type { Report } from '@/types';
 
 export default async function DashboardPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   // Get the current user
   const { data: { user } } = await supabase.auth.getUser();

@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   // Where to redirect after auth (defaults to /dashboard)
   const next = searchParams.get('next') ?? '/dashboard';
 
-  const supabase = createClient();
+  const supabase = await createClient();
 
   // Handle PKCE code exchange (for OAuth and email confirmation with code)
   if (code) {
